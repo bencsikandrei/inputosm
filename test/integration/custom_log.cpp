@@ -16,11 +16,11 @@ int main(int argc, char **argv)
         auto lvl_to_str = [](input_osm::log_level_t lvl) {
             switch (lvl)
             {
-                case input_osm::LOG_LEVEL_TRACE:
+                case input_osm::log_level_t::INPUTOSM_LOG_LEVEL_TRACE:
                     return "TRC";
-                case input_osm::LOG_LEVEL_INFO:
+                case input_osm::log_level_t::INPUTOSM_LOG_LEVEL_INFO:
                     return "INF";
-                case input_osm::LOG_LEVEL_ERROR:
+                case input_osm::log_level_t::INPUTOSM_LOG_LEVEL_ERROR:
                     return "ERR";
                 default:
                     return "NON";
@@ -36,7 +36,7 @@ int main(int argc, char **argv)
         printf("%s [%s]: %s\n", time_buf, lvl_to_str(level), message);
     };
 
-    input_osm::set_log_level(input_osm::LOG_LEVEL_TRACE);
+    input_osm::set_log_level(input_osm::log_level_t::INPUTOSM_LOG_LEVEL_TRACE);
     input_osm::set_log_callback(logWithTime);
 
     using input_osm::span_t;

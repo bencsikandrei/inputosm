@@ -15,6 +15,7 @@
 #define INPUTOSM_H
 
 #include "span.h"
+#include "inputosm_c.h"
 
 #include <cstdint>
 #include <functional>
@@ -101,25 +102,14 @@ void set_max_thread_count();
 
 size_t thread_count();
 
-enum log_level_t : uint8_t
-{
-    LOG_LEVEL_TRACE = 0,
-    LOG_LEVEL_INFO = 4,
-    LOG_LEVEL_ERROR = 7,
-    LOG_LEVEL_DISABLED = 255,
-};
+using log_level_t = inputosm_log_level_t;
+using log_callback_t = inputosm_log_callback_t;
 
 /**
  * @brief Set log level
  * @note not thread safe
  */
 void set_log_level(log_level_t) noexcept;
-
-/**
- * @brief Log callback used for reporting back to the user
- * @note the message is a \0 terminated c-string
- */
-using log_callback_t = void (*)(log_level_t level, const char* message);
 
 /**
  * @brief Set the log callback
