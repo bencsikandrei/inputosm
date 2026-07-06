@@ -13,10 +13,12 @@
 
 #include <inputosm/inputosm.h>
 
+#include "inputosm_internal.h"
 #include "inputosmlog.h"
 
 #include <cstring>
-#include <filesystem>
+#include <string_view>
+#include <thread>
 
 namespace input_osm
 {
@@ -30,6 +32,7 @@ thread_local size_t thread_index{0};
 thread_local size_t block_index{0};
 file_type_t file_type{file_type_t::xml};
 bool verbose = true;
+size_t g_thread_count = 1;
 
 bool input_pbf(const char* filename) noexcept;
 bool input_xml(const char* filename);
@@ -95,7 +98,43 @@ bool input_file(const char* filename,
 
 void set_verbose(bool value)
 {
-    verbose = value;
+    inputosm_set_verbose(value);
+}
+
+void set_thread_count(size_t count)
+{
+    inputosm_set_thread_count(count);
+}
+
+void set_max_thread_count()
+{
+    inputosm_set_max_thread_count();
+}
+
+size_t thread_count()
+{
+    return inputosm_thread_count();
 }
 
 } // namespace input_osm
+
+extern "C" void inputosm_set_verbose(const bool verbose)
+{
+    input_osm::verbose = verbose;
+}
+
+extern "C" void inputosm_set_thread_count(const size_t count)
+{
+    const size_t hw_threads = std::max(1U, std::thread::hardware_concurrency());
+    input_osm::g_thread_count = std::min(count, hw_threads);
+}
+
+extern "C" size_t inputosm_thread_count()
+{
+    return input_osm::g_thread_count;
+}
+
+extern "C" void inputosm_set_max_thread_count()
+{
+    input_osm::g_thread_count = std::max(1U, std::thread::hardware_concurrency());
+}

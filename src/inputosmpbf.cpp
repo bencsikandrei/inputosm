@@ -955,20 +955,6 @@ bool input_blob_mem(uint8_t*& buffer,
     return true;
 }
 
-static size_t g_thread_count = 0;
-void set_thread_count(size_t count)
-{
-    g_thread_count = std::min(count, static_cast<size_t>(std::thread::hardware_concurrency()));
-}
-void set_max_thread_count()
-{
-    g_thread_count = std::thread::hardware_concurrency();
-}
-size_t thread_count()
-{
-    return g_thread_count ? g_thread_count : 1;
-}
-
 bool input_mem(uint8_t* file_begin, size_t file_size) noexcept
 {
     // iterate file blocks
