@@ -14,7 +14,6 @@
 #ifndef INPUTOSM_H
 #define INPUTOSM_H
 
-#include "span.h"
 #include "inputosm_c.h"
 
 #include <cstdint>
@@ -33,7 +32,8 @@ struct node_t
     int64_t id = 0;
     int64_t raw_latitude = 0;
     int64_t raw_longitude = 0;
-    span_t<tag_t> tags;
+    tag_t* tags;
+    size_t tags_size;
     int32_t version = 0;
     int32_t timestamp = 0;
     int32_t changeset = 0;
@@ -43,8 +43,10 @@ static_assert(sizeof(node_t) <= 64);
 struct way_t
 {
     int64_t id = 0;
-    span_t<int64_t> node_refs;
-    span_t<tag_t> tags;
+    int64_t* node_refs;
+    size_t node_refs_size;
+    tag_t* tags;
+    size_t tags_size;
     int32_t version = 0;
     int32_t timestamp = 0;
     int32_t changeset = 0;
@@ -54,8 +56,10 @@ static_assert(sizeof(way_t) <= 64);
 struct relation_t
 {
     int64_t id = 0;
-    span_t<relation_member_t> members;
-    span_t<tag_t> tags;
+    relation_member_t* members;
+    size_t members_size;
+    tag_t* tags;
+    size_t tags_size;
     int32_t version = 0;
     int32_t timestamp = 0;
     int32_t changeset = 0;
@@ -80,9 +84,9 @@ void set_verbose(bool value);
 
 bool input_file(const char* filename,
                 bool decode_metadata,
-                std::function<bool(span_t<node_t>)> node_handler,
-                std::function<bool(span_t<way_t>)> way_handler,
-                std::function<bool(span_t<relation_t>)> relation_handler) noexcept;
+                std::function<bool(const node_t*, size_t)> node_handler,
+                std::function<bool(const way_t*, size_t)> way_handler,
+                std::function<bool(const relation_t*, size_t)> relation_handler) noexcept;
 
 void set_thread_count(size_t);
 
