@@ -49,9 +49,9 @@ log_level_t g_log_level = []() {
 
 log_callback_t g_log_callback = g_default_log_callback;
 
-void set_log_level(log_level_t level) noexcept
+void set_log_level(log_level_t log_level) noexcept
 {
-    inputosm_set_log_level(level);
+    inputosm_set_log_level(log_level);
 }
 
 bool set_log_callback(log_callback_t log_callback) noexcept
@@ -80,9 +80,9 @@ void log(log_level_t level, const char* fmt, ...) noexcept
 
 } // namespace input_osm
 
-extern "C" void inputosm_set_log_level(const inputosm_log_level_t level) 
+extern "C" void inputosm_set_log_level(const inputosm_log_level_t log_level) 
 {
-    input_osm::g_log_level = level;
+    input_osm::g_log_level = log_level;
 }
 
 extern "C" bool inputosm_set_log_callback(const inputosm_log_callback_t log_callback) 

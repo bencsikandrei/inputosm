@@ -23,11 +23,10 @@
 namespace input_osm
 {
 
-struct tag_t
-{
-    const char* key = nullptr;
-    const char* value = nullptr;
-};
+using tag_t = inputosm_tag_t;
+using relation_member_t = inputosm_relation_member_t;
+using log_level_t = inputosm_log_level_t;
+using log_callback_t = inputosm_log_callback_t;
 
 struct node_t
 {
@@ -51,17 +50,6 @@ struct way_t
     int32_t changeset = 0;
 };
 static_assert(sizeof(way_t) <= 64);
-
-struct relation_member_t
-{
-    /**
-     * @brief Relation type
-     * @details NODE = 0; WAY = 1; RELATION = 2;
-     */
-    uint8_t type = 0;
-    int64_t id = 0;
-    const char* role = nullptr;
-};
 
 struct relation_t
 {
@@ -102,14 +90,11 @@ void set_max_thread_count();
 
 size_t thread_count();
 
-using log_level_t = inputosm_log_level_t;
-using log_callback_t = inputosm_log_callback_t;
-
 /**
  * @brief Set log level
  * @note not thread safe
  */
-void set_log_level(log_level_t) noexcept;
+void set_log_level(log_level_t log_level) noexcept;
 
 /**
  * @brief Set the log callback
