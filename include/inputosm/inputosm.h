@@ -16,7 +16,7 @@
 
 #include "inputosm_c.h"
 
-#include <cstdint>
+#include <cstddef>
 #include <functional>
 
 namespace input_osm
@@ -27,57 +27,27 @@ using relation_member_t = inputosm_relation_member_t;
 using log_level_t = inputosm_log_level_t;
 using log_callback_t = inputosm_log_callback_t;
 
-struct node_t
-{
-    int64_t id = 0;
-    int64_t raw_latitude = 0;
-    int64_t raw_longitude = 0;
-    tag_t* tags;
-    size_t tags_size;
-    int32_t version = 0;
-    int32_t timestamp = 0;
-    int32_t changeset = 0;
-};
+using node_t = inputosm_node_t;
 static_assert(sizeof(node_t) <= 64);
 
-struct way_t
-{
-    int64_t id = 0;
-    int64_t* node_refs;
-    size_t node_refs_size;
-    tag_t* tags;
-    size_t tags_size;
-    int32_t version = 0;
-    int32_t timestamp = 0;
-    int32_t changeset = 0;
-};
+using way_t = inputosm_way_t;
 static_assert(sizeof(way_t) <= 64);
 
-struct relation_t
-{
-    int64_t id = 0;
-    relation_member_t* members;
-    size_t members_size;
-    tag_t* tags;
-    size_t tags_size;
-    int32_t version = 0;
-    int32_t timestamp = 0;
-    int32_t changeset = 0;
-};
+using relation_t = inputosm_relation_t;
 static_assert(sizeof(relation_t) <= 64);
 
 enum class file_type_t
 {
-    pbf,
-    xml
+    pbf = INPUTOSM_PBF,
+    xml = INPUTOSM_XML
 };
 
 enum class mode_t
 {
-    bulk,
-    create,
-    modify,
-    destroy
+    bulk = INPUTOSM_BULK,
+    create = INPUTOSM_CREATE,
+    modify = INPUTOSM_MODIFY,
+    destroy = INPUTOSM_DESTROY
 };
 
 void set_verbose(bool value);

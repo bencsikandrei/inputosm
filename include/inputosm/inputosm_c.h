@@ -13,7 +13,8 @@ extern "C"
     typedef enum
     {
         INPUTOSM_PBF,
-        INPUTOSM_XML
+        INPUTOSM_XML,
+        INPUTOSM_FILETYPE_LAST
     } inputosm_file_type_t;
 
     typedef enum
@@ -21,7 +22,8 @@ extern "C"
         INPUTOSM_BULK,
         INPUTOSM_CREATE,
         INPUTOSM_MODIFY,
-        INPUTOSM_DESTROY
+        INPUTOSM_DESTROY,
+        INPUTOSM_MODE_LAST
     } inputosm_mode_t;
 
     /**

@@ -37,6 +37,14 @@ int main(int argc, char** argv)
         puts("Invalid log callback set!");
         return 1;
     }
-    inputosm_set_log_level(INPUTOSM_LOG_LEVEL_TRACE);
     puts("Log callback installed successfully!");
+    const int log_level = INPUTOSM_LOG_LEVEL_TRACE;
+    inputosm_set_log_level(log_level);
+    printf("Log level set to: %d (%s)\n", log_level, lvl_to_str(log_level));
+
+    inputosm_set_thread_count(4);
+    printf("Thread count set to: %lu\n", inputosm_thread_count());
+
+    inputosm_set_max_thread_count();
+    printf("Thread count set to: %lu\n", inputosm_thread_count());
 }
