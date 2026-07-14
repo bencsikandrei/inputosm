@@ -117,9 +117,14 @@ extern "C"
      */
     size_t inputosm_thread_count();
 
-    typedef bool (*inputosm_node_callback_t)(void*, inputosm_node_t*, size_t);
-    typedef bool (*inputosm_way_callback_t)(void*, inputosm_way_t*, size_t);
-    typedef bool (*inputosm_relation_callback_t)(void*, inputosm_relation_t*, size_t);
+    /**
+     * @brief Get the working thread index
+     */
+    size_t inputosm_thread_index();
+
+    typedef bool (*inputosm_node_callback_t)(void*, const inputosm_node_t*, size_t);
+    typedef bool (*inputosm_way_callback_t)(void*, const inputosm_way_t*, size_t);
+    typedef bool (*inputosm_relation_callback_t)(void*, const inputosm_relation_t*, size_t);
 
     /**
      * @brief Handlers for the various entities
@@ -133,11 +138,11 @@ extern "C"
     } inputosm_callbacks_t;
 
     /**
-    * @brief load and process a file, calling appropriate callbacks based on OSM entities
-    * @param filename a zero terminated string containing the name of the file to open
-    * @param decode_metadata should metadata be decoded?
-    * @param handlers user provided callbacks and user data for each entity type
-    */
+     * @brief load and process a file, calling appropriate callbacks based on OSM entities
+     * @param filename a zero terminated string containing the name of the file to open
+     * @param decode_metadata should metadata be decoded?
+     * @param handlers user provided callbacks and user data for each entity type
+     */
     bool inputosm_input_file(const char* filename, bool decode_metadata, inputosm_callbacks_t handlers);
 
     /**

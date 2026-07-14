@@ -13,6 +13,7 @@
 
 #include <inputosm/inputosm.h>
 
+#include "inputosm/inputosm_c.h"
 #include "inputosm_internal.h"
 #include "inputosmlog.h"
 
@@ -137,4 +138,24 @@ extern "C" size_t inputosm_thread_count()
 extern "C" void inputosm_set_max_thread_count()
 {
     input_osm::g_thread_count = std::max(1U, std::thread::hardware_concurrency());
+}
+
+extern "C" size_t inputosm_thread_index() {
+    return input_osm::thread_index;
+}
+
+extern "C" bool inputosm_input_file(const char* filename, bool decode_metadata, inputosm_callbacks_t handlers)
+{
+    return input_osm::input_file(
+        filename,
+        decode_metadata,
+        [handlers](const inputosm_node_t* nodes, size_t nodes_size) {
+            return handlers.node_handler(handlers.user_data, nodes, nodes_size);
+        },
+        [handlers](const inputosm_way_t* ways, size_t ways_size) {
+            return handlers.way_handler(handlers.user_data, ways, ways_size);
+        },
+        [handlers](const inputosm_relation_t* relations, size_t relations_size) {
+            return handlers.relation_handler(handlers.user_data, relations, relations_size);
+        });
 }
