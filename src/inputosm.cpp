@@ -38,11 +38,12 @@ size_t g_thread_count = 1;
 bool input_pbf(const char* filename) noexcept;
 bool input_xml(const char* filename);
 
-bool input_file(const char* filename,
-                bool decode_metadata,
-                std::function<bool(const node_t*, size_t)> node_handler,
-                std::function<bool(const way_t*, size_t)> way_handler,
-                std::function<bool(const relation_t*, size_t)> relation_handler) noexcept
+template <typename NodeHandler, typename WayHandler, typename RelationHandler>
+bool input_file_(const char* filename,
+                 bool decode_metadata,
+                 NodeHandler&& node_handler,
+                 WayHandler&& way_handler,
+                 RelationHandler&& relation_handler) noexcept
 {
     input_osm::decode_metadata = decode_metadata;
     input_osm::node_handler = std::move(node_handler);
@@ -97,6 +98,15 @@ bool input_file(const char* filename,
     return result;
 }
 
+bool input_file(const char* filename,
+                bool decode_metadata,
+                std::function<bool(const node_t*, size_t)> node_handler,
+                std::function<bool(const way_t*, size_t)> way_handler,
+                std::function<bool(const relation_t*, size_t)> relation_handler) noexcept
+{
+    return input_file_(filename, decode_metadata, node_handler, way_handler, relation_handler);
+}
+
 void set_verbose(bool value)
 {
     inputosm_set_verbose(value);
@@ -140,13 +150,14 @@ extern "C" void inputosm_set_max_thread_count()
     input_osm::g_thread_count = std::max(1U, std::thread::hardware_concurrency());
 }
 
-extern "C" size_t inputosm_thread_index() {
+extern "C" size_t inputosm_thread_index()
+{
     return input_osm::thread_index;
 }
 
 extern "C" bool inputosm_input_file(const char* filename, bool decode_metadata, inputosm_callbacks_t handlers)
 {
-    return input_osm::input_file(
+    return input_osm::input_file_(
         filename,
         decode_metadata,
         [handlers](const inputosm_node_t* nodes, size_t nodes_size) {
